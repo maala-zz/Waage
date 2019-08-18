@@ -1,0 +1,34 @@
+[
+{
+"camp":{ "value":"Cheb", "id":"1" },
+"material":{"value":"CDRA", "id":"1" },
+"variant":{"value":"Grund Stuff", "id":"1"},
+"substance":{"value":"Schrott", "id": "1"},
+"trackingNumber":{"value":"1091",id:"1"},
+"amount":{"value":"495", "id": "1"},
+"convert":{"value":"gram","id":"1"},
+"inventoryAmount":{"value":"0", "id":"1"}
+},
+
+{
+"camp":{ "value":"Halle", "id":"2" },
+"material":{"value":"11F", "id":"2" },
+"variant":{"value":"Grund Stuff", "id":"1"},
+"substance":{"value":"Legierung", "id": "2"},
+"trackingNumber":{"value":"1091","id":"1"},
+"amount":{"value":"300", "id": "2"},
+"convert":{"value":"gram","id":"1"},
+"inventoryAmount":{"value":"0", "id":"1"}
+},
+
+{
+"camp":{ "value":"Bermen", "id":"3" },
+"material":{"value":"22D", "id":"3" },
+"variant":{"value":"Grund Stuff", "id":"1"},
+"substance":{"value":"SUB#3", "id": "3"},
+"trackingNumber":{"value":"1091","id":"1"},
+"amount":{"value":"210", "id": "3"},
+"convert":{"value":"gram","id":"1"},
+"inventoryAmount":{"value":"0", "id":"1"}
+}
+]
