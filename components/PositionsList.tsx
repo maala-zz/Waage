@@ -25,7 +25,7 @@ class PositionsList extends React.Component<Props, State>{
               selectedValue = {this.state.pos} onValueChange = {this.updatePos}>
 {
               camps.map((camp, index) => (
-                  <Picker.Item label = {camp.name} value = {camp.id} />
+                  <Picker.Item key = {index} label = {camp.name} value = {camp.id} />
                   ))
 }
 

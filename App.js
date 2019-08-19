@@ -12,9 +12,9 @@ import React, { Component } from "react";
 //import LoginScreen from "./screens/LoginScreen";
 // eslint-disable-next-line quotes
 import Container from "./Container";
+import SplashScreen from "./screens/SplashScreen";
 import { MenuProvider } from 'react-native-popup-menu';
 const App = () => {
-  console.log("Hi");
   return (
     <MenuProvider>
         <Container />

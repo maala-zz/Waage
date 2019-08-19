@@ -7,6 +7,7 @@ import {
   Text,
   AsyncStorage
 } from "react-native";
+import * as Progress from 'react-native-progress';
 import Touchable from 'react-native-platform-touchable';
 import Button from "../components/Button";
 import FormTextInput from "../components/FormTextInput";
@@ -144,8 +145,13 @@ class LoginScreen extends React.Component<{}, State> {
             }
             onPress={() => { 
                 if(this.state.userName == "test" && this.state.password == "test"){
-                AsyncStorage.setItem('userName', this.state.userName);
-                this.setState({ "IsLoggedIn": true }); 
+                AsyncStorage.setItem("isLoggedIn", 0);
+
+                AsyncStorage.getItem('isLoggedIn').then((value) =>{
+                  console.log("here "+value);    
+              }
+           );
+
                 this.props.navigation.push('Table', {language:this.state.language});
               }
              } }
