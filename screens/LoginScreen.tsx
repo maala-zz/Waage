@@ -4,7 +4,8 @@ import {
   StyleSheet,
   View,
   StatusBar,
-  Text
+  Text,
+  AsyncStorage
 } from "react-native";
 import Touchable from 'react-native-platform-touchable';
 import Button from "../components/Button";
@@ -14,8 +15,9 @@ import strings from "../config/strings";
 import constants from "../config/constants";
 import PositionsList from "../components/PositionsList";
 import Container from "../Container";
+
 interface State {
-  email: string;
+  userName: string;
   password: string;
   emailTouched: boolean;
   passwordTouched: boolean;
@@ -26,15 +28,15 @@ class LoginScreen extends React.Component<{}, State> {
   passwordInputRef = React.createRef<FormTextInput>();
 
    state = {
-    email: "",
+    userName: "",
     password: "",
     emailTouched: false,
     passwordTouched: false,
     language:"EN"
   };
 
-  handleEmailChange = (email: string) => {
-    this.setState({ email: email });
+  handleEmailChange = (userName: string) => {
+    this.setState({ userName: userName });
   };
 
   handlePasswordChange = (password: string) => {
@@ -55,13 +57,6 @@ class LoginScreen extends React.Component<{}, State> {
     this.setState({ passwordTouched: true });
   };
 
-  handleLoginPress = () => {
-    console.log( "this.state.email" );
-    console.log( this.state.email );
-    if(this.state.email == "test" && this.state.password == "test")
-    this.props.navigation.push('Table');
-  };
-
   toggleLanguage = () =>{
     if( this.state.language == "EN" ){
       this.setState({ language: "DU" });
@@ -74,13 +69,13 @@ class LoginScreen extends React.Component<{}, State> {
   render() {
     const { navigate } = this.props.navigation;
     const {
-      email,
+      userName,
       password,
       emailTouched,
       passwordTouched
     } = this.state;
     const emailError =
-      !email && emailTouched
+      !userName && emailTouched
         ? strings.EMAIL_REQUIRED
         : undefined;
     const passwordError =
@@ -111,7 +106,7 @@ class LoginScreen extends React.Component<{}, State> {
         </View>
         <View style={styles.form}>
           <FormTextInput
-            value={this.state.email}
+            value={this.state.userName}
             onChangeText={this.handleEmailChange}
             onSubmitEditing={this.handleEmailSubmitPress}
             placeholder={
@@ -122,9 +117,6 @@ class LoginScreen extends React.Component<{}, State> {
             returnKeyType="next"
             onBlur={this.handleEmailBlur}
             error={emailError}
-            // `blurOnSubmit` causes a keyboard glitch on
-            // Android when we want to manually focus the
-            // next input.
             blurOnSubmit={constants.IS_IOS}
           />
           <FormTextInput
@@ -151,12 +143,17 @@ class LoginScreen extends React.Component<{}, State> {
               this.state.language == "EN" ? strings.EN_LOGIN : strings.DU_LOGIN
             }
             onPress={() => { 
-              console.log( "this.state.email" );
-              console.log( this.state.email );
-              if(this.state.email == "test" && this.state.password == "test")
-              this.props.navigation.push('Table', {language:this.state.language});
+              {
+                console.log("Hi");
+              }
+              if(this.state.userName == "test" && this.state.password == "test"){
+                AsyncStorage.setItem('userName', this.state.userName);
+                this.setState({ 'userName': this.state.userName });
+                this.setState({ 'password': this.state.password });        
+                this.props.navigation.push('Table', {language:this.state.language});
+              }
              } }
-            disabled={email == "" || password == ""}
+            disabled={userName == "" || password == ""}
           />
         </View>
       </KeyboardAvoidingView>

@@ -18,7 +18,6 @@ const camps = require('../camps.json');
 const materials = require('../materials.json');
 const substance = require('../substance.json');
 const tableDataFile = require('../data.json');
-const jsonfile = require('jsonfile');
 import FiltersMultiSelect from "../components/FiltersMultiSelect";
 import HideWithKeyboard from 'react-native-hide-with-keyboard';
 export default class ItemsTable extends Component {

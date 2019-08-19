@@ -5,10 +5,16 @@ import LoginScreen from './screens/LoginScreen';
 
 const NavigationStack = createStackNavigator({
   Main: {
-    screen: LoginScreen
+    screen: LoginScreen,
+    navigationOptions: {
+      title: "Sign In"
+    }
     },
     Table: {
-    screen: ItemsTable
+    screen: ItemsTable,
+    navigationOptions: {
+      title: "Reports"
+    }
     },
 });
 
