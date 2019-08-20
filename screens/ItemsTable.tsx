@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, ScrollView , Text , Alert } from 'react-native';
+import { StyleSheet, View, ScrollView , Text , AsyncStorage } from 'react-native';
 import { Table, TableWrapper, Row } from 'react-native-table-component';
 import strings from "../config/strings";
 import TableTextInput from "../components/TableTextInput";
@@ -29,29 +29,29 @@ export default class ItemsTable extends Component {
    
     this.state = {
       showAmount:true,
-      language: this.props.navigation.getParam("language",strings.DU) ,
-      tableHead: 
-      this.props.navigation.getParam("language",strings.DU) == strings.EN ? 
-        [strings.EN_PLACE, strings.EN_MATERIAL, strings.EN_VARIANTS,
-         strings.EN_SUBSTANCE, strings.EN_TRACKING_NUMBER, strings.EN_AMOUNT, 
-         strings.EN_CONVERT, strings.EN_INVENTORY_AMOUNT]
-        :
-        [strings.DU_PLACE, strings.DU_MATERIAL, strings.DU_VARIANTS,
-          strings.DU_SUBSTANCE, strings.DU_TRACKING_NUMBER, strings.DU_AMOUNT, 
-          strings.DU_CONVERT, strings.DU_INVENTORY_AMOUNT],
-
-        tableHeadWithOutAmount: 
-          this.props.navigation.getParam("language",strings.DU) == strings.EN ? 
+      language: "" ,
+      
+      tableHeadWithAmount_EN: 
             [strings.EN_PLACE, strings.EN_MATERIAL, strings.EN_VARIANTS,
-             strings.EN_SUBSTANCE, strings.EN_TRACKING_NUMBER, strings.EN_INVENTORY_AMOUNT]
-            :
+            strings.EN_SUBSTANCE, strings.EN_TRACKING_NUMBER, strings.EN_AMOUNT, 
+            strings.EN_CONVERT, strings.EN_INVENTORY_AMOUNT],
+      
+         tableHeadWithAmount_DU: 
+            [strings.DU_PLACE, strings.DU_MATERIAL, strings.DU_VARIANTS,
+            strings.DU_SUBSTANCE, strings.DU_TRACKING_NUMBER, strings.DU_AMOUNT, 
+            strings.DU_CONVERT, strings.DU_INVENTORY_AMOUNT],
+
+      tableHeadWithOutAmount_EN: 
+            [strings.EN_PLACE, strings.EN_MATERIAL, strings.EN_VARIANTS,
+             strings.EN_SUBSTANCE, strings.EN_TRACKING_NUMBER, strings.EN_INVENTORY_AMOUNT],
+      tableHeadWithOutAmount_DU:
             [strings.DU_PLACE, strings.DU_MATERIAL, strings.DU_VARIANTS,
               strings.DU_SUBSTANCE, strings.DU_TRACKING_NUMBER,strings.DU_INVENTORY_AMOUNT],    
 
       widthArrWithAmount:
-        [90, 100, 80, 70, 100, 100, 70,80] ,
+            [90, 100, 80, 70, 100, 100, 70,80] ,
       widthArrWithOutAmount:
-        [90, 100, 80, 70, 100, 80] ,
+            [90, 100, 80, 70, 100, 80] ,
       showDialog:false,
       selectedCamps : [],
       selectedMaterials : [],
@@ -61,6 +61,17 @@ export default class ItemsTable extends Component {
       toggleOn:true
     }
   }
+
+  componentWillMount(){
+    AsyncStorage.getItem('language').then((asyncLanguage) =>{
+           if( asyncLanguage == null || asyncLanguage == strings.EN ){
+            this.setState({language:strings.EN});
+           }
+           else
+           this.setState({language:strings.DU}); 
+       }
+    );
+}
   
   OnPressHideDialog = () => {
     this.setState({showDialog:false});
@@ -234,7 +245,7 @@ export default class ItemsTable extends Component {
         <ScrollView horizontal={true}>
           <View>
             <Table borderStyle={{borderColor: '#C1C0B9'}}>
-              <Row data={this.state.toggleOn ? state.tableHead : state.tableHeadWithOutAmount} widthArr={this.state.toggleOn ? this.state.widthArrWithAmount : this.state.widthArrWithOutAmount} style={styles.header} textStyle={styles.text}/>
+              <Row data={state.toggleOn ? (state.language == strings.DU ? state.tableHeadWithAmount_DU : state.tableHeadWithAmount_EN) : (state.language == strings.DU ? state.tableHeadWithOutAmount_DU : state.tableHeadWithOutAmount_EN)} widthArr={this.state.toggleOn ? this.state.widthArrWithAmount : this.state.widthArrWithOutAmount} style={styles.header} textStyle={styles.text}/>
             </Table>
             <ScrollView style={styles.dataWrapper}>
               <Table borderStyle={{borderColor: '#C1C0B9'}}>

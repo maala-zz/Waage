@@ -1,6 +1,7 @@
 import * as React from "react";
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, AsyncStorage } from "react-native";
 import colors from "../config/colors";
+import strings from "../config/strings";
 import ItemsTable from "../screens/ItemsTable";
 import Container from "../Container";
 interface Props {
@@ -9,11 +10,32 @@ interface Props {
 }
 
 class LogOutButton extends React.Component<Props> {
+
+
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      language: ""
+    }
+  }
+
+  componentWillMount(){
+    AsyncStorage.getItem('language').then((asyncLanguage) =>{
+           if( asyncLanguage == null || asyncLanguage == strings.EN ){
+            this.setState({language:strings.EN});
+           }
+           else
+           this.setState({language:strings.DU}); 
+       }
+    );
+}
+
   render() {
     const { onPress } = this.props;
     return (
       <TouchableOpacity style={styles.container} onPress={onPress}>
-        <Text style={styles.text}>{"logout"}</Text>
+        <Text style={styles.text}>{this.state.language == strings.EN ? strings.EN_LOGOUT: strings.DU_LOGOUT}</Text>
       </TouchableOpacity>
     );
   }

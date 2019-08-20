@@ -16,6 +16,7 @@ const strings = {
   EN_INVENTORY_AMOUNT:"Inventory amount",
   EN_PICK:"Pick",
   EN_PICK_ITEMS:"Pick items",
+  EN_LOGOUT:"Logout",
 
   DU:"DU",
   DU_LOGIN: "Anmelden",
@@ -34,5 +35,6 @@ const strings = {
   DU_INVENTORY_AMOUNT:"Inventarbetrag",
   DU_PICK:"wählen",
   DU_PICK_ITEMS:"Elemente auswählen",
+  DU_LOGOUT:"Ausloggen"
 };
 export default strings;

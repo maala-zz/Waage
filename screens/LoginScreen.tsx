@@ -33,8 +33,19 @@ class LoginScreen extends React.Component<{}, State> {
     password: "",
     emailTouched: false,
     passwordTouched: false,
-    language:"EN"
+    language:""
   };
+
+  componentWillMount(){
+    AsyncStorage.getItem('language').then((asyncLanguage) =>{
+           if( asyncLanguage == null || asyncLanguage == strings.EN ){
+            this.setState({language:strings.EN});
+           }
+           else
+           this.setState({language:strings.DU}); 
+       }
+    );
+}
 
   handleEmailChange = (userName: string) => {
     this.setState({ userName: userName });
@@ -59,12 +70,17 @@ class LoginScreen extends React.Component<{}, State> {
   };
 
   toggleLanguage = () =>{
-    if( this.state.language == "EN" ){
-      this.setState({ language: "DU" });
-    }
-    else{
-      this.setState({ language: "EN" });
-    }
+    AsyncStorage.getItem('language').then((asyncLanguage) =>{
+      if( asyncLanguage == null || asyncLanguage == strings.EN ){
+       AsyncStorage.setItem("language", strings.DU).then(() => {});
+       this.setState({language:strings.DU});
+      }
+      else{
+        AsyncStorage.setItem("language", strings.EN).then(() => {});
+        this.setState({language:strings.EN}); 
+      }
+      }
+    );
   }
 
   render() {
@@ -145,7 +161,7 @@ class LoginScreen extends React.Component<{}, State> {
             }
             onPress={() => { 
                 if(this.state.userName == "test" && this.state.password == "test"){
-                AsyncStorage.setItem("isLoggedIn", 0).then(() => {});
+                AsyncStorage.setItem("isLoggedIn", "1").then(() => {});
 
                 this.props.navigation.push('Table', {language:this.state.language});
               }
