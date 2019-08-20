@@ -16,7 +16,6 @@ interface State {
 class SplashScreen extends React.Component<{}, State> {
 
     state = {
-        isLoggedIn: false,
         dataLoaded:false
       };
 
@@ -24,8 +23,8 @@ class SplashScreen extends React.Component<{}, State> {
         console.log("Hi Yoah");
         AsyncStorage.getItem('isLoggedIn').then((value) =>{
                this.setState({dataLoaded:true});
-               this.props.navigation.pop();
-               if( value == null || value == 0 ){
+               console.log(value);
+               if( value == null || value === "0" ){
                 this.props.navigation.navigate('Login', {language:"DU"});
                }
                else

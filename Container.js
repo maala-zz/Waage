@@ -20,14 +20,16 @@ const NavigationStack = createStackNavigator({
 
   Table: {
     screen: ItemsTable,
-    navigationOptions: {
+    
+    navigationOptions: ({ navigation }) => ({
       title: "Reports",
       headerLeft: null,
-      headerRight: <LogOutButton onPress = { () => {AsyncStorage.setItem("isLoggedIn",0)
-    
-      this.props.navigation.navigate('Login', {language:"DU"})}
-    } />
-    }
+      headerRight: <LogOutButton onPress = { () => { 
+      AsyncStorage.removeItem("isLoggedIn").then(() => {
+        navigation.navigate('Login', {language:"DU"})
+      })
+      }} />
+    })
   },
 });
 

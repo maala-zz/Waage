@@ -145,12 +145,7 @@ class LoginScreen extends React.Component<{}, State> {
             }
             onPress={() => { 
                 if(this.state.userName == "test" && this.state.password == "test"){
-                AsyncStorage.setItem("isLoggedIn", 0);
-
-                AsyncStorage.getItem('isLoggedIn').then((value) =>{
-                  console.log("here "+value);    
-              }
-           );
+                AsyncStorage.setItem("isLoggedIn", 0).then(() => {});
 
                 this.props.navigation.push('Table', {language:this.state.language});
               }
