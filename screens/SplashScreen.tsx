@@ -23,8 +23,7 @@ class SplashScreen extends React.Component<{}, State> {
         console.log("Hi Yoah");
         AsyncStorage.getItem('isLoggedIn').then((value) =>{
                this.setState({dataLoaded:true});
-               console.log(value);
-               if( value == null || value === "0" ){
+               if( value == null || value == 0 ){
                 this.props.navigation.navigate('Login', {language:"DU"});
                }
                else
