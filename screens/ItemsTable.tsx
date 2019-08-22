@@ -159,11 +159,11 @@ export default class ItemsTable extends Component {
   }
 
   WriteReports = () =>{
-    // console.log("Congrats!!");
+     console.log("Congrats!! again");
     // console.log("tableData")
-    // console.log(this.state.tableDataFile);
+     console.log(tableDataFile);
     var ReportData = [] ;
-    for (let j = 0; j < this.state.tableDataFile.length; j += 1) {
+    for (let j = 0; j < tableDataFile.length; j += 1) {
 
       const rowData = [];
       rowData.push(tableDataFile[j].camp.value);
@@ -219,7 +219,6 @@ export default class ItemsTable extends Component {
 
   render() {
     const { selectedCamps, selectedMaterials , selectedSubstances } = this.state;
-    console.log("state.filterEmptyField " + this.state.filterEmptyField);
     const state = this.state;
     var tableData = [] ;
     for (let j = 0; j < tableDataFile.length; j += 1) {
@@ -238,14 +237,14 @@ export default class ItemsTable extends Component {
         if( (this.IsSelectedInCamps(tableDataFile[j].camp.id) || selectedCamps.length == 0)
         &&  (this.IsSelectedInMaterials(tableDataFile[j].material.id) || selectedMaterials.length == 0 )
         &&  (this.IsSelectedInSubstances(tableDataFile[j].substance.id) || selectedSubstances.length == 0)
-        &&  (this.state.filterEmptyField == false || (this.state.filterEmptyField == true && (this.state.inventory_amount[j] == null || this.state.inventory_amount[j] == "0")) )
-         ){
-           console.log("rwo "+j+" pushed");
-        tableData.push(rowData);
-      }
-      this.state.inventory_amount.push("0");
+        )
+         {
+              console.log("rwo "+j+" pushed");
+              tableData.push(rowData);
+         }
       }
 
+      console.log("tableData after "+ tableData);
     return (
       <View style={styles.container}>
         <View style = {styles.buttonsTopContainer}>
@@ -332,7 +331,6 @@ export default class ItemsTable extends Component {
                 {
                   tableData.map((rowData, index) => (
                     <Row
-                      key={index}
                       data={rowData}
                       widthArr={this.state.showAmountToggledOn ? this.state.widthArrWithAmount : this.state.widthArrWithOutAmount}
                       style={[styles.row, index%2 && {backgroundColor: colors.WHITE}]}
