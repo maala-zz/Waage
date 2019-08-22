@@ -17,6 +17,10 @@ const strings = {
   EN_PICK:"Pick",
   EN_PICK_ITEMS:"Pick items",
   EN_LOGOUT:"Logout",
+  EN_CONFIRM:"Confirm",
+  EN_CANCEL:"Cancel",
+  EN_WARNING:"Warning",
+  EN_EMPTY_WARNING:"there are some empty fields",
 
   DU:"DU",
   DU_LOGIN: "Anmelden",
@@ -35,6 +39,10 @@ const strings = {
   DU_INVENTORY_AMOUNT:"Inventarbetrag",
   DU_PICK:"wählen",
   DU_PICK_ITEMS:"Elemente auswählen",
-  DU_LOGOUT:"Ausloggen"
+  DU_LOGOUT:"Ausloggen",
+  DU_CONFIRM:"Bestätigen",
+  DU_CANCEL:"Stornieren",
+  DU_WARNING:"Warnung",
+  DU_EMPTY_WARNING:"Es gibt einige leere Felder",
 };
 export default strings;

@@ -26,6 +26,7 @@ class TableTextInput extends React.Component<Props> {
             this.setState({editable:false});
           }
         }
+        onChangeText = {this.props.onChangeText}
         editable={this.state.editable}
         ref={this.textInputRef}
         selectionColor={colors.DODGER_BLUE}

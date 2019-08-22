@@ -1,25 +1,27 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, ScrollView , Text , AsyncStorage } from 'react-native';
+import { StyleSheet, View, ScrollView , Alert , AsyncStorage, Text } from 'react-native';
 import { Table, TableWrapper, Row } from 'react-native-table-component';
-import strings from "../config/strings";
-import TableTextInput from "../components/TableTextInput";
-import TableButton from "../components/TableButton";
-import colors from '../config/colors';
-import Container from "../Container";
 import Dialog, {
   DialogTitle,
   DialogContent,
   DialogButton,
   ScaleAnimation,
 } from 'react-native-popup-dialog';
+import HideWithKeyboard from 'react-native-hide-with-keyboard';
 import ToggleSwitch from 'toggle-switch-react-native';
 import Button from "../components/Button";
 const camps = require('../camps.json');
 const materials = require('../materials.json');
 const substance = require('../substance.json');
 const tableDataFile = require('../data.json');
+var RNFS = require('react-native-fs');
 import FiltersMultiSelect from "../components/FiltersMultiSelect";
-import HideWithKeyboard from 'react-native-hide-with-keyboard';
+import strings from "../config/strings";
+import TableTextInput from "../components/TableTextInput";
+import TableButton from "../components/TableButton";
+import colors from '../config/colors';
+import Container from "../Container";
+
 export default class ItemsTable extends Component {
   
   constructor(props) {
@@ -56,9 +58,11 @@ export default class ItemsTable extends Component {
       selectedCamps : [],
       selectedMaterials : [],
       selectedSubstances : [],
-      tableData:[],        
+      inventory_amount : [],
+      tableData:[],     
       visible:false,
-      toggleOn:true
+      showAmountToggledOn:true,
+      filterEmptyField:false
     }
   }
 
@@ -87,7 +91,7 @@ export default class ItemsTable extends Component {
   }
 
   switchToggle = (isOn) => {
-    this.setState({toggleOn:!this.state.toggleOn});
+    this.setState({showAmountToggledOn:!this.state.showAmountToggledOn});
   };
 
   onSelectedItemsChange = (selectedItems) =>{
@@ -131,39 +135,115 @@ export default class ItemsTable extends Component {
   }
 
   ResetFilters = () => {
-    this.setState({ selectedCamps : [], selectedMaterials : [], selectedSubstances : [] }) ;
+    this.setState({ selectedCamps : [], selectedMaterials : [], selectedSubstances : [], filterEmptyField:false }) ;
+  }
+
+  UpdateInventoryAmount = (index, text) => {
+    console.log("index = "+ index);
+    console.log(text);
+    this.state.inventory_amount[index] = text ;
+    console.log(this.state.inventory_amount);
+  }
+
+  WriteToFile = (ReportData) =>{
+    var path = RNFS.ExternalStorageDirectoryPath + '/test.json';
+
+    // write the file
+    RNFS.writeFile(path, JSON.stringify(ReportData), 'utf8')
+      .then((success) => {
+        console.log('FILE WRITTEN!'+ path);
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }
+
+  WriteReports = () =>{
+    // console.log("Congrats!!");
+    // console.log("tableData")
+    // console.log(this.state.tableDataFile);
+    var ReportData = [] ;
+    for (let j = 0; j < this.state.tableDataFile.length; j += 1) {
+
+      const rowData = [];
+      rowData.push(tableDataFile[j].camp.value);
+      rowData.push(tableDataFile[j].material.value);
+      rowData.push(tableDataFile[j].variant.value);
+      rowData.push(tableDataFile[j].substance.value);
+      rowData.push(tableDataFile[j].trackingNumber.value);
+      rowData.push(tableDataFile[j].amount.value);
+      rowData.push(tableDataFile[j].convert.value);
+        
+      if( this.state.inventory_amount[j] == null )
+      rowData.push("0");
+      else
+      rowData.push(this.state.inventory_amount[j]);
+
+      ReportData.push(rowData);
+    }
+    // console.log("ReportData")
+    // console.log(ReportData);
+    this.WriteToFile(ReportData);
   }
 
   OnPressSubmit = (tableData) => {
-    console.log("table data 2");
     console.log(tableData);
+    var show = false ;
+    for( let i = 0 ; i < tableData.length ; i+=1 ){
+     if( this.state.inventory_amount[i] == "0" || this.state.inventory_amount[i] == null ){
+      show = true;
+      break ;
+     }
+    }
 
+    if( show ){
+      Alert.alert(
+        this.state.language == strings.DU? strings.DU_WARNING:strings.EN_WARNING,
+        this.state.language == strings.DU? strings.DU_EMPTY_WARNING:strings.EN_EMPTY_WARNING,
+        [
+          {
+            text: this.state.language == strings.DU? strings.DU_CANCEL:strings.EN_CANCEL,
+            onPress: () => this.setState({filterEmptyField:true}),
+            style: 'cancel',
+          },
+          {text: this.state.language == strings.DU? strings.DU_CONFIRM:strings.EN_CONFIRM, onPress: () => this.WriteReports()},
+        ],
+        {cancelable: false},
+      );
+    }
+    else{
+      this.WriteReports();
+    }
 
   }
 
   render() {
     const { selectedCamps, selectedMaterials , selectedSubstances } = this.state;
+    console.log("state.filterEmptyField " + this.state.filterEmptyField);
     const state = this.state;
     var tableData = [] ;
-   for (let j = 0; j < tableDataFile.length; j += 1) {
+    for (let j = 0; j < tableDataFile.length; j += 1) {
 
         const rowData = [];
-
         rowData.push(tableDataFile[j].camp.value);
         rowData.push(tableDataFile[j].material.value);
         rowData.push(tableDataFile[j].variant.value);
         rowData.push(tableDataFile[j].substance.value);
         rowData.push(tableDataFile[j].trackingNumber.value);
-        if( this.state.toggleOn ){
+        if( this.state.showAmountToggledOn ){
           rowData.push(tableDataFile[j].amount.value);
           rowData.push(tableDataFile[j].convert.value);
         }
-        rowData.push(<TableTextInput ></TableTextInput>);
+        rowData.push(<TableTextInput onChangeText = {(text) => this.UpdateInventoryAmount(j,text)}></TableTextInput>);
         if( (this.IsSelectedInCamps(tableDataFile[j].camp.id) || selectedCamps.length == 0)
         &&  (this.IsSelectedInMaterials(tableDataFile[j].material.id) || selectedMaterials.length == 0 )
-        &&  (this.IsSelectedInSubstances(tableDataFile[j].substance.id) || selectedSubstances.length == 0) ){
+        &&  (this.IsSelectedInSubstances(tableDataFile[j].substance.id) || selectedSubstances.length == 0)
+        &&  (this.state.filterEmptyField == false || (this.state.filterEmptyField == true && (this.state.inventory_amount[j] == null || this.state.inventory_amount[j] == "0")) )
+         ){
+           console.log("rwo "+j+" pushed");
         tableData.push(rowData);
-        }
+      }
+      this.state.inventory_amount.push("0");
       }
 
     return (
@@ -217,7 +297,7 @@ export default class ItemsTable extends Component {
               <View style={ styles.toggleButton }>
               
               <ToggleSwitch
-                            isOn={this.state.toggleOn}
+                            isOn={this.state.showAmountToggledOn}
                             onColor="green"
                             offColor="silver"
                             label={strings.DU_AMOUNT}
@@ -245,7 +325,7 @@ export default class ItemsTable extends Component {
         <ScrollView horizontal={true}>
           <View>
             <Table borderStyle={{borderColor: '#C1C0B9'}}>
-              <Row data={state.toggleOn ? (state.language == strings.DU ? state.tableHeadWithAmount_DU : state.tableHeadWithAmount_EN) : (state.language == strings.DU ? state.tableHeadWithOutAmount_DU : state.tableHeadWithOutAmount_EN)} widthArr={this.state.toggleOn ? this.state.widthArrWithAmount : this.state.widthArrWithOutAmount} style={styles.header} textStyle={styles.text}/>
+              <Row data={state.showAmountToggledOn ? (state.language == strings.DU ? state.tableHeadWithAmount_DU : state.tableHeadWithAmount_EN) : (state.language == strings.DU ? state.tableHeadWithOutAmount_DU : state.tableHeadWithOutAmount_EN)} widthArr={this.state.showAmountToggledOn ? this.state.widthArrWithAmount : this.state.widthArrWithOutAmount} style={styles.header} textStyle={styles.text}/>
             </Table>
             <ScrollView style={styles.dataWrapper}>
               <Table borderStyle={{borderColor: '#C1C0B9'}}>
@@ -254,7 +334,7 @@ export default class ItemsTable extends Component {
                     <Row
                       key={index}
                       data={rowData}
-                      widthArr={this.state.toggleOn ? this.state.widthArrWithAmount : this.state.widthArrWithOutAmount}
+                      widthArr={this.state.showAmountToggledOn ? this.state.widthArrWithAmount : this.state.widthArrWithOutAmount}
                       style={[styles.row, index%2 && {backgroundColor: colors.WHITE}]}
                       textStyle={styles.text}
                     />
