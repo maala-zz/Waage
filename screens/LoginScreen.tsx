@@ -7,7 +7,6 @@ import {
   Text,
   AsyncStorage
 } from "react-native";
-import * as Progress from 'react-native-progress';
 import Touchable from 'react-native-platform-touchable';
 import Button from "../components/Button";
 import FormTextInput from "../components/FormTextInput";

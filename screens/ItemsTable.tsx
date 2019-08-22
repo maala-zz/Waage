@@ -139,10 +139,7 @@ export default class ItemsTable extends Component {
   }
 
   UpdateInventoryAmount = (index, text) => {
-    console.log("index = "+ index);
-    console.log(text);
     this.state.inventory_amount[index] = text ;
-    console.log(this.state.inventory_amount);
   }
 
   WriteToFile = (ReportData) =>{
@@ -159,9 +156,6 @@ export default class ItemsTable extends Component {
   }
 
   WriteReports = () =>{
-     console.log("Congrats!! again");
-    // console.log("tableData")
-     console.log(tableDataFile);
     var ReportData = [] ;
     for (let j = 0; j < tableDataFile.length; j += 1) {
 
@@ -181,13 +175,10 @@ export default class ItemsTable extends Component {
 
       ReportData.push(rowData);
     }
-    // console.log("ReportData")
-    // console.log(ReportData);
     this.WriteToFile(ReportData);
   }
 
   OnPressSubmit = (tableData) => {
-    console.log(tableData);
     var show = false ;
     for( let i = 0 ; i < tableData.length ; i+=1 ){
      if( this.state.inventory_amount[i] == "0" || this.state.inventory_amount[i] == null ){
@@ -239,12 +230,10 @@ export default class ItemsTable extends Component {
         &&  (this.IsSelectedInSubstances(tableDataFile[j].substance.id) || selectedSubstances.length == 0)
         )
          {
-              console.log("rwo "+j+" pushed");
               tableData.push(rowData);
          }
       }
 
-      console.log("tableData after "+ tableData);
     return (
       <View style={styles.container}>
         <View style = {styles.buttonsTopContainer}>

@@ -5,10 +5,6 @@ import {
   AsyncStorage
 } from "react-native";
 import * as Progress from 'react-native-progress';
-import colors from "../config/colors";
-import Container from "../Container";
-import LoginScreen from "./LoginScreen";
-import ItemsTable from "./ItemsTable";
 interface State {
     IsLoggedIn: boolean;
   }
